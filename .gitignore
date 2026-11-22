@@ -1,0 +1,46 @@
+
+# Dependencies
+**/node_modules/
+**/vendor/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Build outputs
+**/.next/
+**/out/
+**/build/
+**/dist/
+
+# Laravel
+backend/storage/*.key
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/bootstrap/cache/*
+backend/public/storage
+
+# Next.js
+frontend/.vercel/
+
+# IDE & OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+**/coverage/
+
+# Temporary
+*.tmp
+*.swp
+backend/.env
