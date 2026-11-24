@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log_aktifitas', function (Blueprint $table) {
+        Schema::create('log_aktivitas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('aksi', 30);   // login, logout, create, update, delete, approve, reject, return

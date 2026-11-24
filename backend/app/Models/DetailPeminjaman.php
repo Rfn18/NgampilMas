@@ -4,23 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DetailPeminjaman extends Model
 {
-    protected $table = 'detail_peminjamans';
+    public $timestamps = false;
+
+    protected $table = 'detail_peminjaman';
 
     protected $fillable = [
         'peminjaman_id',
         'alat_id',
         'jumlah',
-        'jumlah_dikembalikan'
+        'jumlah_dikembalikan',
     ];
 
-    public function peminjaman(): BelongsTo {
-        return $this->belongsTo(Peminjaman::class, 'peminjaman_id');
+    public function peminjaman(): BelongsTo
+    {
+        return $this->belongsTo(Peminjaman::class);
     }
 
-    public function alat(): BelongsTo {
-        return $this->belongsTo(Alat::class, 'alat_id');
+    public function alat(): BelongsTo
+    {
+        return $this->belongsTo(Alat::class);
+    }
+
+    public function pengembalian(): HasMany
+    {
+        return $this->hasMany(Pengembalian::class);
     }
 }

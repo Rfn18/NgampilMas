@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
-class LogAktifitas extends Model
+class LogAktivitas extends Model
 {
     const UPDATED_AT = null;
 
-    protected $table = 'log_aktifitas';
+    protected $table = 'log_aktivitas';
 
     protected $fillable = [
         'user_id',
@@ -31,15 +31,16 @@ class LogAktifitas extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public static function catat(
+   public static function catat(
         string $aksi,
         string $modul,
         ?int $dataId = null,
         ?array $lama = null,
         ?array $baru = null,
+        ?int $userId = null,
     ): void {
         static::create([
-            'user_id' => Auth::id(),
+            'user_id'    => $userId ?? Auth::id(),
             'aksi'       => $aksi,
             'modul'      => $modul,
             'data_id'    => $dataId,

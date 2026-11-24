@@ -7,13 +7,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DetailPeminjamanResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'                  => $this->id,
+            'jumlah'              => $this->jumlah,
+            'jumlah_dikembalikan' => $this->jumlah_dikembalikan,
+            'sisa'                => $this->jumlah - $this->jumlah_dikembalikan,
+
+            'alat'        => new AlatResource($this->whenLoaded('alat')),
+            'peminjaman' => new PeminjamanResource($this->whenLoaded('peminjaman')),
+            'pengembalian' => PengembalianResource::collection($this->whenLoaded('pengembalian')),
+        ];
     }
 }
