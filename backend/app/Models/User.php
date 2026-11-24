@@ -2,28 +2,28 @@
 
 namespace App\Models;
 
-use App\Enums\UserRole;
-use Illuminate\Database\Eloquent\Builder;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'role',
+        'nama',
         'username',
         'email',
         'password',
-        'identity_number',
-        'phone_number',
+        'role',
+        'no_telp',
+        'alamat',
         'is_active',
+        'last_login_at',
     ];
 
     protected $hidden = [
@@ -34,85 +34,44 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'role'              => UserRole::class,
-            'email_verified_at' => 'datetime',
-            'last_login_at'     => 'datetime',
-            'is_active'         => 'boolean',
-            'password'          => 'hashed',
+            'password'      => 'hashed',
+            'is_active'     => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 
-    // --- Relasi ---
-
-    /** Peminjaman yang diajukan user ini (sebagai borrower). */
-    public function loans(): HasMany
+    public function peminjaman(): HasMany
     {
-        return $this->hasMany(Loan::class, 'borrower_id');
+        return $this->hasMany(Peminjaman::class, 'peminjam_id');
     }
 
-    /** Peminjaman yang disetujui/ditolak user ini (sebagai staff/admin). */
-    public function reviewedLoans(): HasMany
+    public function peminjamanDiproses(): HasMany
     {
-        return $this->hasMany(Loan::class, 'reviewed_by');
+        return $this->hasMany(Peminjaman::class, 'petugas_id');
     }
 
-    /** Pengembalian yang diterima user ini. */
-    public function receivedReturns(): HasMany
+    public function pengembalianDiterima(): HasMany
     {
-        return $this->hasMany(LoanReturn::class, 'received_by');
+        return $this->hasMany(Pengembalian::class, 'petugas_id');
     }
 
-    public function fineRates(): HasMany
+    public function logAktivitas(): HasMany
     {
-        return $this->hasMany(FineRate::class, 'created_by');
-    }
-
-    public function stockMovements(): HasMany
-    {
-        return $this->hasMany(StockMovement::class, 'performed_by');
-    }
-
-    public function activityLogs(): HasMany
-    {
-        return $this->hasMany(ActivityLog::class);
-    }
-
-    // --- Scope ---
-
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('is_active', true);
-    }
-
-    public function scopeWithRole(Builder $query, UserRole ...$roles): Builder
-    {
-        return $query->whereIn('role', array_map(fn (UserRole $r) => $r->value, $roles));
-    }
-
-    // --- Helper role ---
-
-    public function hasRole(UserRole ...$roles): bool
-    {
-        return in_array($this->role, $roles, true);
+        return $this->hasMany(LogAktivitas::class);
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->role === 'admin';
     }
 
-    public function isStaff(): bool
+    public function isPetugas(): bool
     {
-        return $this->role === UserRole::Staff;
+        return $this->role === 'petugas';
     }
 
-    public function isBorrower(): bool
+    public function isPeminjam(): bool
     {
-        return $this->role === UserRole::Borrower;
-    }
-
-    public function canReview(): bool
-    {
-        return $this->role->canReview();
+        return $this->role === 'peminjam';
     }
 }
