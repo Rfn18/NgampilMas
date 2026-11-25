@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama', 100);
             $table->string('username', 50)->unique();
-            $table->string('email', 100)->nullable()->unique();
+            $table->string('email', 100)->unique();
+            $table->timestamp('email_verified_at')->nullable(); 
             $table->string('password');
             $table->enum('role', ['admin', 'petugas', 'peminjam'])->default('peminjam');
             $table->string('no_telp', 20)->nullable();

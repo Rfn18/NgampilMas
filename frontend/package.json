@@ -11,6 +11,10 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "axios": "^1.21.1",
+    "dayjs": "^1.11.23",
+    "tailwindcss": "^4.3.5",
     "vue": "^3.5.42"
   },
   "devDependencies": {
