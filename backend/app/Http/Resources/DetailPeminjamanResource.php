@@ -15,9 +15,9 @@ class DetailPeminjamanResource extends JsonResource
             'jumlah_dikembalikan' => $this->jumlah_dikembalikan,
             'sisa'                => $this->jumlah - $this->jumlah_dikembalikan,
 
-            'alat'        => new AlatResource($this->whenLoaded('alat')),
-            'peminjaman' => new PeminjamanResource($this->whenLoaded('peminjaman')),
-            'pengembalian' => PengembalianResource::collection($this->whenLoaded('pengembalian')),
+            'alat'                => new AlatResource($this->whenLoaded('alat')),
+            'peminjaman'          => new PeminjamanResource($this->whenLoaded('peminjaman')),
+            'pengembalian'        => PengembalianResource::collection($this->whenLoaded('pengembalian')),
         ];
     }
 }
