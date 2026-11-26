@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RejectPeminjamanRequest;
+use App\Http\Requests\StorePeminjamanRequest;
+use App\Http\Requests\UpdatePeminjamanRequest;
+use App\Http\Resources\PeminjamanResource;
+use App\Models\Peminjaman;
+use App\Services\PeminjamanService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PeminjamanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    private const RELASI = ['peminjam', 'petugas', 'detail.alat'];
+    
     public function index()
     {
         //

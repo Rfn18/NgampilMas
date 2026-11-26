@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateKategoriRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateKategoriRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +24,9 @@ class UpdateKategoriRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama'      => ['sometimes', 'required', 'string', 'max:100',
+                        Rule::unique('kategori', 'nama')->ignore($this->route('kategori'))],
+            'deskripsi' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
