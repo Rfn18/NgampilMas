@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\KategoriController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -9,16 +10,16 @@ use App\Http\Controllers\Api\LaporanController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LogAktivitasController;
 use App\Http\Controllers\Api\AlatController;
+use App\Http\Controllers\Api\ProfileController;
 
 // Guest
-Route::middleware('throttle:10,1')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-});
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:forgot-password');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:reset-password');
+
 Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
-    ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+    ->middleware(['signed', 'throttle:verify'])->name('verification.verify');
 
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
@@ -26,9 +27,9 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/email/verification-notification', [AuthController::class, 'resendVerification'])
-        ->middleware('throttle:6,1');
+        ->middleware('throttle:verification');
     Route::put('/me', [ProfileController::class, 'update']);
-    Route::put('/me/password', [ProfileController::class, 'password']);
+    Route::put('/me/password', [ProfileController::class, 'password'])->middleware('throttle:password-change');
 
     Route::get('/kategori', [KategoriController::class, 'index']);
     Route::get('/alat', [AlatController::class, 'index']);

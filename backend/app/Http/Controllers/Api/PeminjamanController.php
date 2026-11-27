@@ -8,7 +8,7 @@ use App\Http\Requests\StorePeminjamanRequest;
 use App\Http\Requests\UpdatePeminjamanRequest;
 use App\Http\Resources\PeminjamanResource;
 use App\Models\Peminjaman;
-use App\Services\PeminjamanService;
+use App\Service\PeminjamanService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

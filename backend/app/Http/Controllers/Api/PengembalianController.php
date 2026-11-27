@@ -7,7 +7,7 @@ use App\Http\Requests\StorePengembalianRequest;
 use App\Http\Resources\PengembalianResource;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
-use App\Services\PengembalianService;
+use App\Service\PengembalianService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 

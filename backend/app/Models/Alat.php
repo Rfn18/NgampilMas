@@ -40,7 +40,7 @@ class Alat extends Model
         return $this->hasMany(DetailPeminjaman::class);
     }
 
-    public function scopeTersedia(Builer $query): void {
+    public function scopeTersedia(Builder $query): void {
         $query->where('is_active', true)
             ->where('stok_tersedia', '>', 0);
     }

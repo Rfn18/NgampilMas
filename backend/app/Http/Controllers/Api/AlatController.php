@@ -7,7 +7,7 @@ use App\Http\Requests\StoreAlatRequest;
 use App\Http\Requests\UpdateAlatRequest;
 use App\Http\Resources\AlatResource;
 use App\Models\Alat;
-use App\Services\AlatService;
+use App\Service\AlatService;
 use Illuminate\Http\Request;
 
 class AlatController extends Controller
@@ -17,7 +17,7 @@ class AlatController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validated([
+        $request->validate([
             'q'             => ['nullable', 'string', 'max:100'],
             'kategori_id'   => ['nullable', 'integer'],
             'per_page'      => ['nullable', 'integer', 'min:1', 'max:100']

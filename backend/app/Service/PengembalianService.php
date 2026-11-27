@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Service;
 
 use App\Models\Alat;
 use App\Models\LogAktivitas;
@@ -26,7 +26,7 @@ class PengembalianService
             }
 
             $tanggal = Carbon::parse($tanggalKembali)->startOfDay();
-            if ($tanggal->lt($p->tanggal_dipinjam)) {
+            if ($tanggal->lt($p->tanggal_pinjam)) {
                 throw ValidationException::withMessages([
                       'tanggal_kembali' => 'Tanggal kembali tidak boleh sebelum tanggal pinjam.',
                 ]);
@@ -37,16 +37,16 @@ class PengembalianService
             $hasil = new Collection();
 
             foreach($items as $item) {
-                $d = $p->detail->where('id', $item['detail_peminjaman_id']);
+                $d = $p->detail->firstWhere('id', $item['detail_peminjaman_id']);
 
-                if (!$d) {
+                if (! $d) {
                     throw ValidationException::withMessages([
                         'items' => 'Ada item yang bukan bagian dari peminjaman ini.'
                     ]);
                 }
 
                 $sisa = $d->jumlah - $d->jumlah_dikembalikan;
-                if ($item['jumalh'] > $sisa) {
+                if ($item['jumlah'] > $sisa) {
                     throw ValidationException::withMessages([
                         'items' => "Jumlah melebihi sisa yang belum dikembalikan ({$sisa})."
                     ]);
@@ -63,7 +63,7 @@ class PengembalianService
                     'jumlah'                    => $item['jumlah'],
                     'kondisi'                   => $item['kondisi'],
                     'hari_terlambat'            => $terlambat,
-                    'tarif_denda_per_hari'      => $tarif,
+                    'tarif_denda_snapshot'      => $tarif,
                     'total_denda'               => $terlambat * $tarif * $item['jumlah'],
                     'catatan'                   => $item['catatan'] ?? null
                 ]);
@@ -73,7 +73,7 @@ class PengembalianService
                 if (in_array($item['kondisi'], ['baik', 'rusak_ringan'], true)) {
                     $alat->increment('stok_tersedia', $item['jumlah']);
                 } else {
-                    alat->decrement('stok_tersedia', $item['jumlah']);
+                    $alat->decrement('stok_total', $item['jumlah']);
                 }
 
                 LogAktivitas::catat('return', 'pengembalian', $pengembalian->id);

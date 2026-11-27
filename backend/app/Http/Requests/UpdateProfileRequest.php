@@ -12,7 +12,7 @@ class UpdateProfileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,9 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nama'    => ['sometimes', 'required', 'string', 'max:100'],
+            'no_telp' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\-\s]+$/'],
+            'alamat'  => ['nullable', 'string', 'max:500'],
         ];
     }
 }
